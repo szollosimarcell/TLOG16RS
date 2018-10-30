@@ -1,4 +1,4 @@
-package com.mycompany.tlog16rs;
+package com.mszollosi.tlog16rs;
 
 import io.dropwizard.Configuration;
 

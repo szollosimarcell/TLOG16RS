@@ -1,13 +1,33 @@
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+
 plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.4.0'
+    id "com.github.johnrengelman.shadow" version "4.0.2"
+    id 'java'
+    id 'application'
 }
 
-apply plugin: 'java'
-apply plugin: 'application'
-
+version '1.0-SNAPSHOT'
+group 'com.mszollosi.tlog16rs'
+description 'Dropwozard project with timelogger core'
 
 sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
+    testCompile group: 'junit', name: 'junit', version: '4.10'
+    compile group: 'io.dropwizard', name: 'dropwizard-core', version: dropwizardVersion
+
+}
 
 scmVersion {
     versionCreator 'versionWithBranch'
@@ -15,22 +35,24 @@ scmVersion {
 project.version = scmVersion.version
 
 project.ext {
-    dropwizardVersion = '0.8.2'   
+    dropwizardVersion = '1.3.5'
 }
 
+mainClassName = "com.mszollosi.tlog16rs.TLOG16RSApplication"
 
-mainClassName = "com.mycompany.tlog16rs.TLOG16RSApplication"
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-
-    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
-    testCompile group: 'junit', name: 'junit', version: '4.10'
-    compile group: 'io.dropwizard', name: 'dropwizard-core', version: dropwizardVersion		
-        
+shadowJar {
+    mergeServiceFiles()
+    exclude 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.SF'
+    manifest {
+        attributes 'Implementation-Title': rootProject.name
+        attributes 'Implementation-Version': rootProject.version
+        attributes 'Implementation-Vendor-Id': rootProject.group
+        attributes 'Build-Time': ZonedDateTime.now(ZoneId.of("UTC")).format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
+        attributes 'Built-By': InetAddress.localHost.hostName
+        attributes 'Created-By': 'Gradle ' + gradle.gradleVersion
+        attributes 'Main-Class': mainClassName
+    }
+    archiveName 'TLOG16RS.jar'
 }
 
 run {
