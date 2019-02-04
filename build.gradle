@@ -17,6 +17,10 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
+project.ext {
+    dropwizardVersion = '1.3.5'
+}
+
 repositories {
     jcenter()
 }
@@ -33,10 +37,6 @@ scmVersion {
     versionCreator 'versionWithBranch'
 }
 project.version = scmVersion.version
-
-project.ext {
-    dropwizardVersion = '1.3.5'
-}
 
 mainClassName = "com.mszollosi.tlog16rs.TLOG16RSApplication"
 
